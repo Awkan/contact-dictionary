@@ -1,0 +1,18 @@
+#{extends 'main.html' /}
+#{set title:'Home' /}
+
+<h1>Twitter Authentication</h1>
+
+
+#{if error}
+
+<h1>Oops…</h1>
+
+    <p>${error}</p>
+
+#{/if}
+#{else}
+
+<p>${users}</p>
+
+#{/else}

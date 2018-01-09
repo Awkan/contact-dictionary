@@ -14,6 +14,12 @@ application.mode=dev
 # If you deploy your application to several instances be sure to use the same key !
 application.secret=e227tafmfs0xrexah43hm34kkrcetav48nwk9x037wp87jkrp06m7n8wc8m7gbag
 
+# Application variables
+# ~~~~~
+twitter.consumer_key=YOUR_CONSUMER_KEY
+twitter.consumer_secret=YOUR_CONSUMER_SECRET
+
+
 # Additional modules
 # ~~~~~
 # A module is another play! application. Add a line for each module you want

@@ -3,6 +3,7 @@ package controllers;
 import models.User;
 import oauth.twitter.TwitterUsers;
 import play.Logger;
+import play.Play;
 import play.libs.OAuth;
 import play.libs.OAuth.ServiceInfo;
 import play.libs.WS;
@@ -21,8 +22,8 @@ public class TwitterAuthentication extends Controller{
             "https://twitter.com/oauth/request_token",
             "https://twitter.com/oauth/access_token",
             "https://twitter.com/oauth/authorize",
-            "KnRMZZuLKgIK3MLVsSulsg4Oh",
-            "zKVPKEwsRBwFPbjjtODvXaqFBNKGUg3vlDmYwBC0UWpEAzzKF3"
+            Play.configuration.getProperty("twitter.consumer_key"),
+            Play.configuration.getProperty("twitter.consumer_secret")
     );
 
     public static void index() {

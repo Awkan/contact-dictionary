@@ -8,7 +8,7 @@ public class TwitterUsers {
 
     private String next_cursor;
 
-    private List<User> users;
+    private List<Users> users;
 
     private String previous_cursor_str;
 
@@ -26,12 +26,12 @@ public class TwitterUsers {
         this.next_cursor = next_cursor;
     }
 
-    public List<User> getUsers ()
+    public List<Users> getUsers ()
     {
         return users;
     }
 
-    public void setUsers (List<User> users)
+    public void setUsers (List<Users> users)
     {
         this.users = users;
     }

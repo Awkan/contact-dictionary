@@ -1,5 +1,6 @@
 package controllers;
 
+import com.google.gson.*;
 import models.User;
 import oauth.twitter.TwitterUsers;
 import oauth.twitter.Users;
@@ -9,12 +10,11 @@ import play.libs.OAuth.ServiceInfo;
 import play.libs.WS;
 import play.libs.WS.*;
 import play.mvc.Controller;
-import com.google.gson.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TwitterAuthentication extends Controller{
+public class GoogleAuthentication extends Controller{
 
     private static String URL_GET_FRIENDS = "https://api.twitter.com/1.1/friends/list.json";
 
@@ -22,8 +22,8 @@ public class TwitterAuthentication extends Controller{
             "https://twitter.com/oauth/request_token",
             "https://twitter.com/oauth/access_token",
             "https://twitter.com/oauth/authorize",
-            "KnRMZZuLKgIK3MLVsSulsg4Oh",
-            "zKVPKEwsRBwFPbjjtODvXaqFBNKGUg3vlDmYwBC0UWpEAzzKF3"
+            "TODO",
+            "TODO"
     );
 
     public static void index() {

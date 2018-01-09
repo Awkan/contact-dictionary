@@ -13,5 +13,8 @@ GET     /twitter/import                         TwitterAuthentication.index
 # Map static resources from the /app/public folder to the /public path
 GET     /public/                                staticDir:public
 
+# ERROR
+GET     /error                                  Errors.message(message:String)
+
 # Catch all
 *       /{controller}/{action}                  {controller}.{action}

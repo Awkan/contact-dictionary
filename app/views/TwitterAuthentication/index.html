@@ -1,18 +1,10 @@
 #{extends 'main.html' /}
 #{set title:'Home' /}
 
-<h1>Twitter Authentication</h1>
 
-
-#{if error}
-
-<h1>Oops…</h1>
-
-    <p>${error}</p>
-
-#{/if}
-#{else}
-
-<p>${users}</p>
-
-#{/else}
+<div class="jumbotron">
+    <div class="container">
+        <h1 class="display-3"><i class="fa fa-twitter" aria-hidden="true"></i> Twitter Import</h1>
+        <p>${title}</p>
+    </div>
+</div>

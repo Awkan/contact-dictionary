@@ -57,7 +57,7 @@ public class TwitterAuthentication extends Controller{
     
     public static List<Contact> getUsers() throws Exception {
         String nextCursor = "";
-        List<Users> users = new ArrayList<>(0);
+        List<Users> users = new ArrayList<Users>(0);
         while(!"0".equals(nextCursor)){
             TwitterUsers twitterUsers = getNextUsers(nextCursor);
             Logger.info("twitterUsers: " + twitterUsers);

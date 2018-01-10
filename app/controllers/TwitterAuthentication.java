@@ -1,5 +1,7 @@
 package controllers;
 
+import components.Normalizer;
+import models.Contact;
 import models.User;
 import oauth.twitter.TwitterUsers;
 import oauth.twitter.Users;
@@ -12,6 +14,7 @@ import play.libs.WS.*;
 import play.mvc.Controller;
 import com.google.gson.*;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,7 +55,7 @@ public class TwitterAuthentication extends Controller{
         return gson.fromJson(res.getString(), TwitterUsers.class);
     }
     
-    public static List<Users> getUsers() throws Exception {
+    public static List<Contact> getUsers() throws Exception {
         String nextCursor = "";
         List<Users> users = new ArrayList<>(0);
         while(!"0".equals(nextCursor)){
@@ -62,7 +65,9 @@ public class TwitterAuthentication extends Controller{
             Logger.info("Nextcursor: " + nextCursor);
             users.addAll(twitterUsers.getUsers());
         }
-        return users;
+
+        Normalizer normalizer = new Normalizer();
+        return normalizer.normalizeTwitterUsers(users);
     }
 
     // Twitter authentication

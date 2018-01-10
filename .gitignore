@@ -3,3 +3,5 @@
 *.iws
 conf/application.conf
 tmp/
+play/
+play-old/

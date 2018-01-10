@@ -13,92 +13,65 @@ import play.mvc.Controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import models.User;
+import play.Logger;
+import play.libs.OAuth2;
+import play.libs.WS;
+import play.mvc.Before;
+import play.mvc.Controller;
+
+import com.google.gson.JsonObject;
 
 public class GoogleAuthentication extends Controller{
 
-    private static String URL_GET_FRIENDS = "https://api.twitter.com/1.1/friends/list.json";
-
-    private static final ServiceInfo TWITTER = new ServiceInfo(
-            "https://twitter.com/oauth/request_token",
-            "https://twitter.com/oauth/access_token",
-            "https://twitter.com/oauth/authorize",
-            "TODO",
-            "TODO"
+    public static OAuth2 FACEBOOK = new OAuth2(
+            "https://accounts.google.com/o/oauth2/auth",
+            "https://accounts.google.com/o/oauth2/token",
+            "292609518544-em0pi9k905jiqou359gj2v2gng3hhkqo.apps.googleusercontent.com",
+            "3NE89YfQXkX14BjPLQkdYAQg"
     );
 
     public static void index() {
-        try {
-            renderArgs.put("users", getUsers());
-            renderArgs.put("title", getUsers().size() + " contacts");
-            render();
-        } catch (Exception e) {
-            e.printStackTrace();
-            redirect("/error?message=" + e.getMessage());
+        User u = connected();
+        JsonObject me = null;
+        if (u != null && u.access_token != null) {
+            me = WS.url("https://graph.facebook.com/me?access_token=%s", WS.encode(u.access_token)).get().getJson().getAsJsonObject();
         }
+        render(me);
     }
 
-    public static TwitterUsers getNextUsers(String nextCursor) throws Exception{
-        Gson gson = new Gson();
-        String params = "";
-        if(!"".equals(nextCursor)){
-            params = "?cursor=" + nextCursor;
-        }
-        HttpResponse res = WS.url(URL_GET_FRIENDS + params).oauth(TWITTER, getUser().token, getUser().secret).get();
-        Logger.info("Result request : " + res.getStatus());
-        if(res.getStatus() != 200){
-            throw new Exception("Get Users Exception : " + res.getString());
-        }
-        return gson.fromJson(res.getString(), TwitterUsers.class);
-    }
-    
-    public static List<Users> getUsers() throws Exception {
-        String nextCursor = "";
-        List<Users> users = new ArrayList<>(0);
-        while(!"0".equals(nextCursor)){
-            TwitterUsers twitterUsers = getNextUsers(nextCursor);
-            Logger.info("twitterUsers: " + twitterUsers);
-            nextCursor = twitterUsers.getNext_cursor();
-            Logger.info("Nextcursor: " + nextCursor);
-            users.addAll(twitterUsers.getUsers());
-        }
-        return users;
-    }
-
-    // Twitter authentication
-    public static void authenticate() {
-        User user = getUser();
-        Logger.info(user.token, user.username, user.secret);
-        if (OAuth.isVerifierResponse()) {
-            // We got the verifier; now get the access token, store it and back to index
-            OAuth.Response oauthResponse = OAuth.service(TWITTER).retrieveAccessToken(user.token, user.secret);
-            if (oauthResponse.error == null) {
-                user.token = oauthResponse.token;
-                user.secret = oauthResponse.secret;
-                user.save();
-                Logger.info("save User retrieveAccessToken" + user.secret);
-            } else {
-                Logger.error("Error connecting to twitter: " + oauthResponse.error);
-            }
+    public static void auth() {
+        if (OAuth2.isCodeResponse()) {
+            User u = connected();
+            OAuth2.Response response = FACEBOOK.retrieveAccessToken(authURL());
+            u.access_token = response.accessToken;
+            u.save();
             index();
         }
-        OAuth twitt = OAuth.service(TWITTER);
-        OAuth.Response oauthResponse = twitt.retrieveRequestToken();
-        if (oauthResponse.error == null) {
-            // We received the unauthorized tokens in the OAuth object - store it before we proceed
-            user.token = oauthResponse.token;
-            user.secret = oauthResponse.secret;
-            user.save();
-            Logger.info("save User retrieveRequestToken");
-            Logger.info("Redirect URL_GET_FRIENDS " + twitt.redirectUrl(oauthResponse.token));
-            redirect(twitt.redirectUrl(oauthResponse.token));
-        } else {
-            Logger.error("Error connecting to twitter: " + oauthResponse.error);
-            index();
-        }
+        FACEBOOK.retrieveVerificationCode(authURL());
     }
 
-    private static User getUser() {
-        return User.findOrCreate("guest");
+    @Before
+    static void setuser() {
+        User user = null;
+        if (session.contains("uid")) {
+            Logger.info("existing user: " + session.get("uid"));
+            user = User.get(Long.parseLong(session.get("uid")));
+        }
+        if (user == null) {
+            user = User.createNew();
+            session.put("uid", user.uid);
+        }
+        renderArgs.put("user", user);
     }
+
+    static String authURL() {
+        return play.mvc.Router.getFullUrl("Application.auth");
+    }
+
+    static User connected() {
+        return (User)renderArgs.get("user");
+    }
+
 
 }

@@ -10,11 +10,9 @@
     </div>
 </div>
 
-${res}
-
 <div class="container">
     <div class="row">
-        #{list items:contactList, as:'contact'}
+        #{list items:contacts, as:'contact'}
         <div class="col-md-3 text-center" style="min-height: 200px;border: 1px solid black;">
             <div>
                 <img src="${contact.logoUrl}"/>

@@ -1,6 +1,7 @@
 *.iml
 *.ipr
 *.iws
+*.jar
 conf/application.conf
 tmp/
 play/

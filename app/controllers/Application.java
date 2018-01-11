@@ -26,12 +26,15 @@ public class Application extends Controller {
         render(contacts);
     }
 
-    public static void filter(String name) {
+    public static void filter(String name, String importer) {
         // Get all contacts from ES
-        WS.WSRequest req = WS.url(URL_GET_CONTACTS).setParameter("size", "1000");
+        WS.WSRequest req = WS
+                .url(URL_GET_CONTACTS)
+                .setParameter("size", "1000")
+                .setParameter("default_operator", "AND");
 
-        if (!"".equals(name)) {
-            req = req.setParameter("q", createFilterQuery(name));
+        if (!"".equals(name) || !"".equals(importer)) {
+            req = req.setParameter("q", createFilterQuery(name, importer));
         }
 
         HttpResponse res = req.get();
@@ -47,15 +50,24 @@ public class Application extends Controller {
 
         // Render filters if their are set in order to show filters in front
         renderArgs.put("nameFilter", name);
+        renderArgs.put("importerFilter", importer);
 
         renderTemplate("Application/index.html", contacts);
     }
 
-    private static String createFilterQuery(String name) {
+    private static String createFilterQuery(String name, String importer) {
         String query = "";
 
         if (!"".equals(name)) {
             query += "name:'" + name + "'";
+        }
+
+        if (!"".equals(query)) {
+            query += " ";
+        }
+
+        if (!"".equals(importer)) {
+            query += "importer:'" + importer + "'";
         }
 
         return query;

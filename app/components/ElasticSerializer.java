@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import models.Contact;
+import models.GeoPoint;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,16 +29,26 @@ public class ElasticSerializer {
                 contact.setImporter(sourceObj.get("importer").toString());
             }
             if (null != sourceObj.get("name")) {
-                contact.setName(sourceObj.get("name").toString());
+                contact.setName(sourceObj.get("name").toString().replaceAll("\"", ""));
             }
             if (null != sourceObj.get("location")) {
-                contact.setLocation(sourceObj.get("location").toString());
+                contact.setLocation(sourceObj.get("location").toString().replaceAll("\"", ""));
             }
             if (null != sourceObj.get("logoUrl")) {
-                contact.setLogoUrl(sourceObj.get("logoUrl").toString().replaceAll("\"", ""));
+                contact.setLogoUrl(sourceObj.get("logoUrl").toString().replaceAll("\"", "").replaceAll("_normal", ""));
             }
             if (null != sourceObj.get("bannerUrl")) {
                 contact.setBannerUrl(sourceObj.get("bannerUrl").toString());
+            }
+            if (null != sourceObj.get("locationGeoNames")) {
+                GeoPoint geoPoint = new GeoPoint();
+                if (null != sourceObj.getAsJsonObject("locationGeoNames").get("lat")) {
+                    geoPoint.resetLat(Double.valueOf(sourceObj.getAsJsonObject("locationGeoNames").get("lat").toString()));
+                }
+                if (null != sourceObj.getAsJsonObject("locationGeoNames").get("lon")) {
+                    geoPoint.resetLon(Double.valueOf(sourceObj.getAsJsonObject("locationGeoNames").get("lon").toString()));
+                }
+                contact.setLocationGeoNames(geoPoint);
             }
             contacts.add(contact);
 

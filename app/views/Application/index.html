@@ -13,13 +13,19 @@
 <div class="container">
     <div class="row">
         #{list items:contacts, as:'contact'}
-        <div class="col-md-3 text-center" style="min-height: 200px;border: 1px solid black;">
-            <div>
-                <img src="${contact.logoUrl}"/>
-                <h2>${contact.name}</h2>
-                <p>${contact.location}</p>
+
+            <div class="card" style="width: 14rem;">
+                <img class="card-img-top" src="${contact.logoUrl}" alt="Profil">
+                <div class="card-body">
+                    <h5 class="card-title cut">${contact.name}</h5>
+                    <p class="card-text"><i class="fa fa-map-marker" aria-hidden="true"></i> ${contact.location}</p>
+                    <p class="card-text"><i class="fa fa-location-arrow" aria-hidden="true"></i> ${contact.locationGeoNames.lat}, ${contact.locationGeoNames.lon}</p>
+                    <div class="text-center">
+                        <a href="https://www.google.com/maps/search/${contact.locationGeoNames.lat}, ${contact.locationGeoNames.lon}"><button class="btn btn-info"><i class="fa fa-map-o" aria-hidden="true"></i> Carte</button></a></p>
+                    </div>
+                </div>
             </div>
-        </div>
+
         #{/list}
         #{else}Aucun contact n'existe. Veuillez en importer.#{/else}
     </div>

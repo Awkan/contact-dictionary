@@ -3,6 +3,7 @@ package components;
 import models.GeoPoint;
 import components.geoname.Geoname;
 import models.Contact;
+import oauth.google.Connections;
 import oauth.twitter.Users;
 import play.libs.WS;
 import play.Logger;
@@ -57,6 +58,29 @@ public class Normalizer {
             contacts.add(contact);
         }
 
+        return contacts;
+    }
+
+    public List<Contact> normalizeGoogleUsers(List<Connections> usersList) {
+        List<Contact> contacts = new ArrayList<Contact>();
+        for (Connections connections : usersList) {
+            Contact contact = new Contact();
+            contact.setImporter(Contact.IMPORTER_GOOGLE);
+            contact.setName(connections.getNames().get(0).getDisplayName());
+
+            if(connections.getAddresses() != null && !connections.getAddresses().isEmpty()) {
+                contact.setLocation(connections.getAddresses().get(0).toString().replaceAll("\n", " "));
+                contact.setLocationGeoNames(getGeoPosition(contact.getLocation()));
+            }
+
+            if(!connections.getPhotos().isEmpty()){
+                contact.setLogoUrl(connections.getPhotos().get(0).getUrl());
+            }
+
+            contact.save();
+            saveContactToElasticsearch(contact);
+            contacts.add(contact);
+        }
         return contacts;
     }
 

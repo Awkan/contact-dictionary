@@ -8,6 +8,7 @@ import play.db.jpa.Model;
 public class Contact extends Model{
 
     public static final String IMPORTER_TWITTER = "twitter";
+    public static final String IMPORTER_GOOGLE = "google";
 
     private String importer;
     private String name;

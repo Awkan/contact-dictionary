@@ -1,6 +1,7 @@
 package models;
 
 import javax.persistence.Entity;
+
 import play.db.jpa.Model;
 
 @Entity
@@ -11,6 +12,7 @@ public class Contact extends Model{
     private String importer;
     private String name;
     private String location;
+    private GeoPoint locationGeoNames;
     private String logoUrl;
     private String bannerUrl;
 
@@ -40,6 +42,14 @@ public class Contact extends Model{
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public GeoPoint getLocationGeoNames() {
+        return locationGeoNames;
+    }
+
+    public void setLocationGeoNames(GeoPoint locationGeoNames) {
+        this.locationGeoNames = locationGeoNames;
     }
 
     public String getLogoUrl() {

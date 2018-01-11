@@ -20,7 +20,7 @@ import java.util.List;
 
 public class TwitterAuthentication extends Controller{
 
-    private static String URL_GET_FRIENDS = "https://api.twitter.com/1.1/friends/list.json";
+    private static String URL_GET_FRIENDS = "https://api.twitter.com/1.1/friends/list.json?count=200";
 
     private static final ServiceInfo TWITTER = new ServiceInfo(
             "https://twitter.com/oauth/request_token",
@@ -32,8 +32,9 @@ public class TwitterAuthentication extends Controller{
 
     public static void index() {
         try {
-            renderArgs.put("users", getUsers());
-            renderArgs.put("title", getUsers().size() + " contacts");
+            List<Contact> contacts = getUsers();
+            renderArgs.put("users", contacts);
+            renderArgs.put("title", contacts.size() + " contacts");
             render();
         } catch (Exception e) {
             e.printStackTrace();
@@ -45,7 +46,7 @@ public class TwitterAuthentication extends Controller{
         Gson gson = new Gson();
         String params = "";
         if(!"".equals(nextCursor)){
-            params = "?cursor=" + nextCursor;
+            params = "&cursor=" + nextCursor;
         }
         HttpResponse res = WS.url(URL_GET_FRIENDS + params).oauth(TWITTER, getUser().token, getUser().secret).get();
         Logger.info("Result request : " + res.getStatus());
@@ -73,7 +74,6 @@ public class TwitterAuthentication extends Controller{
     // Twitter authentication
     public static void authenticate() {
         User user = getUser();
-        Logger.info(user.token, user.username, user.secret);
         if (OAuth.isVerifierResponse()) {
             // We got the verifier; now get the access token, store it and back to index
             OAuth.Response oauthResponse = OAuth.service(TWITTER).retrieveAccessToken(user.token, user.secret);
@@ -81,9 +81,10 @@ public class TwitterAuthentication extends Controller{
                 user.token = oauthResponse.token;
                 user.secret = oauthResponse.secret;
                 user.save();
-                Logger.info("save User retrieveAccessToken" + user.secret);
+                Logger.info("save User retrieveAccessToken " + user.toString());
             } else {
                 Logger.error("Error connecting to twitter: " + oauthResponse.error);
+                redirect("/error?message=" + "Error connecting to twitter: " + oauthResponse.error);
             }
             index();
         }
@@ -99,7 +100,7 @@ public class TwitterAuthentication extends Controller{
             redirect(twitt.redirectUrl(oauthResponse.token));
         } else {
             Logger.error("Error connecting to twitter: " + oauthResponse.error);
-            index();
+            redirect("/error?message=" + "Error connecting to twitter: " + oauthResponse.error);
         }
     }
 

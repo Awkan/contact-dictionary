@@ -36,3 +36,34 @@ $ docker run -it -v $PWD:/play-app -p 9000:9000 java-play bash
 Now you are in docker container. You can use it to your needs.
 - `/play-1.2.7.2` is play binary file
 - `/play-app` is your workdir, Your Play! app is here.
+
+## Configuration ElasticSearch
+
+Start Elastic Search
+
+```
+elasticsearch-6.1.1/bin/elasticsearch
+```
+
+Create index
+
+```
+curl -XPUT 'localhost:9200/mashup?pretty' -H 'Content-Type: application/json' -d'
+{
+ "mappings" : {
+  "contact" : {
+   "properties" : {
+    "importer" : {"type": "keyword" },
+    "name" : {"type": "keyword" },
+    "location" : { "type" : "keyword" },
+    "locationGeoNames": {
+          "type": "geo_point"
+        }
+    "logoUrl" : { "type" : "keyword" },
+    "bannerUrl" : { "type" : "keyword" }
+   }
+  }
+ }
+}
+'
+```

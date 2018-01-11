@@ -1,9 +1,8 @@
 package controllers;
 
 import com.google.gson.*;
-import components.ElasticSerializer;
+import components.ElasticDeserializer;
 import models.Contact;
-import play.Logger;
 import play.libs.WS;
 import play.libs.WS.HttpResponse;
 import play.mvc.Controller;
@@ -20,11 +19,45 @@ public class Application extends Controller {
                 .setParameter("size", "1000")
                 .get();
 
-        ElasticSerializer elasticSerializer = new ElasticSerializer();
+        ElasticDeserializer elasticSerializer = new ElasticDeserializer();
         JsonObject json = res.getJson().getAsJsonObject();
         List <Contact> contacts = elasticSerializer.getContactsFromSearch(json);
 
         render(contacts);
     }
 
+    public static void filter(String name) {
+        // Get all contacts from ES
+        WS.WSRequest req = WS.url(URL_GET_CONTACTS).setParameter("size", "1000");
+
+        if (!"".equals(name)) {
+            req = req.setParameter("q", createFilterQuery(name));
+        }
+
+        HttpResponse res = req.get();
+
+        play.Logger.info(name);
+        play.Logger.info(res.getStatus().toString());
+        play.Logger.info(res.getString());
+
+        // Parse receive data
+        ElasticDeserializer elasticSerializer = new ElasticDeserializer();
+        JsonObject json = res.getJson().getAsJsonObject();
+        List <Contact> contacts = elasticSerializer.getContactsFromSearch(json);
+
+        // Render filters if their are set in order to show filters in front
+        renderArgs.put("nameFilter", name);
+
+        renderTemplate("Application/index.html", contacts);
+    }
+
+    private static String createFilterQuery(String name) {
+        String query = "";
+
+        if (!"".equals(name)) {
+            query += "name:'" + name + "'";
+        }
+
+        return query;
+    }
 }

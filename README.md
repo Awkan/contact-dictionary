@@ -58,7 +58,7 @@ curl -XPUT 'localhost:9200/mashup?pretty' -H 'Content-Type: application/json' -d
     "location" : { "type" : "keyword" },
     "locationGeoNames": {
           "type": "geo_point"
-        }
+        },
     "logoUrl" : { "type" : "keyword" },
     "bannerUrl" : { "type" : "keyword" }
    }

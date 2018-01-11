@@ -10,6 +10,10 @@ GET     /auth                                   Application.authenticate
 GET     /twitter/auth                           TwitterAuthentication.authenticate
 GET     /twitter/import                         TwitterAuthentication.index
 
+GET     /google/auth                           GoogleAuthentication.authenticate
+GET     /google/import                         GoogleAuthentication.index(code:String)
+
+
 # Map static resources from the /app/public folder to the /public path
 GET     /public/                                staticDir:public
 

@@ -11,7 +11,7 @@ import java.util.List;
 
 public class Application extends Controller {
 
-    private static final String URL_GET_CONTACTS = "http://localhost:9200/mashup/_search";
+    private static final String URL_GET_CONTACTS = "http://localhost:9200/annuaire/_search";
 
     public static void index() {
         // Get all contacts from ES
@@ -19,9 +19,9 @@ public class Application extends Controller {
                 .setParameter("size", "1000")
                 .get();
 
-        ElasticDeserializer elasticSerializer = new ElasticDeserializer();
+        ElasticDeserializer elasticDeserializer = new ElasticDeserializer();
         JsonObject json = res.getJson().getAsJsonObject();
-        List <Contact> contacts = elasticSerializer.getContactsFromSearch(json);
+        List <Contact> contacts = elasticDeserializer.getContactsFromSearch(json);
 
         render(contacts);
     }
@@ -41,9 +41,9 @@ public class Application extends Controller {
         play.Logger.info(res.getString());
 
         // Parse receive data
-        ElasticDeserializer elasticSerializer = new ElasticDeserializer();
+        ElasticDeserializer elasticDeserializer = new ElasticDeserializer();
         JsonObject json = res.getJson().getAsJsonObject();
-        List <Contact> contacts = elasticSerializer.getContactsFromSearch(json);
+        List <Contact> contacts = elasticDeserializer.getContactsFromSearch(json);
 
         // Render filters if their are set in order to show filters in front
         renderArgs.put("nameFilter", name);

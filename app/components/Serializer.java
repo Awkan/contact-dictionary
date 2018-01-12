@@ -12,13 +12,16 @@ import com.google.gson.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Normalizer {
+public class Serializer {
 
     private static final Gson GSON = new Gson();
 
     private static final String URL_POST_TWITTER_CONTACT = "http://localhost:9200/mashup/contact";
     private static final String URL_GET_GEOPOSITION = "http://api.geonames.org/searchJSON?maxRows=1&username=gonzalt03&q=";
 
+    /**
+     * Get geo position (lat + lon) of related string location
+     */
     private GeoPoint getGeoPosition(String position){
         Gson gson = new Gson();
         GeoPoint geoPoint = new GeoPoint();
@@ -36,7 +39,10 @@ public class Normalizer {
         return geoPoint;
     }
 
-    public List<Contact> normalizeTwitterUsers(List<Users> usersList) {
+    /**
+     * Serialize Users returned by Twitter in order to make them match with Contact object
+     */
+    public List<Contact> serializeTwitterUsers(List<Users> usersList) {
         List<Contact> contacts = new ArrayList<Contact>();
 
         for (Users user :
@@ -57,7 +63,10 @@ public class Normalizer {
         return contacts;
     }
 
-    public List<Contact> normalizeGoogleUsers(List<Connections> usersList) {
+    /**
+     * Serialize Connections returned by Google in order to make them match with Contact object
+     */
+    public List<Contact> serializeGoogleUsers(List<Connections> usersList) {
         List<Contact> contacts = new ArrayList<Contact>();
         for (Connections connections : usersList) {
             Contact contact = new Contact();

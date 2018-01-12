@@ -19,6 +19,7 @@ public class Application extends Controller {
                 .setParameter("size", "1000")
                 .get();
 
+        // Deserialize data to Contact object
         ElasticDeserializer elasticDeserializer = new ElasticDeserializer();
         JsonObject json = res.getJson().getAsJsonObject();
         List <Contact> contacts = elasticDeserializer.getContactsFromSearch(json);

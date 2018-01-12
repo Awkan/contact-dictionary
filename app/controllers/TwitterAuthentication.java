@@ -1,6 +1,6 @@
 package controllers;
 
-import components.Normalizer;
+import components.Serializer;
 import models.Contact;
 import models.User;
 import oauth.twitter.TwitterUsers;
@@ -13,7 +13,6 @@ import play.libs.WS.*;
 import play.mvc.Controller;
 import com.google.gson.*;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,7 +40,10 @@ public class TwitterAuthentication extends Controller{
         }
     }
 
-    public static TwitterUsers getNextUsers(String nextCursor) throws Exception{
+    /**
+     * Get users result page
+     */
+    private static TwitterUsers getNextUsers(String nextCursor) throws Exception{
         Gson gson = new Gson();
         String params = "";
         if(!"".equals(nextCursor)){
@@ -53,7 +55,10 @@ public class TwitterAuthentication extends Controller{
         }
         return gson.fromJson(res.getString(), TwitterUsers.class);
     }
-    
+
+    /**
+     * Get all users
+     */
     public static List<Contact> getUsers() throws Exception {
         String nextCursor = "";
         List<Users> users = new ArrayList<Users>(0);
@@ -63,11 +68,13 @@ public class TwitterAuthentication extends Controller{
             users.addAll(twitterUsers.getUsers());
         }
 
-        Normalizer normalizer = new Normalizer();
-        return normalizer.normalizeTwitterUsers(users);
+        Serializer serializer = new Serializer();
+        return serializer.serializeTwitterUsers(users);
     }
 
-    // Twitter authentication
+    /**
+     * Authenticate Twitter user by OAuth
+     */
     public static void authenticate() {
         User user = getUser();
         if (OAuth.isVerifierResponse()) {

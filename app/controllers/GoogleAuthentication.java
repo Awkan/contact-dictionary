@@ -1,17 +1,11 @@
 package controllers;
 
 import com.google.gson.*;
-import components.Normalizer;
-import models.Contact;
-import models.User;
+import components.Serializer;
 import oauth.google.Connections;
 import oauth.google.GoogleAuthAccessToken;
 import oauth.google.GoogleContact;
-import oauth.twitter.TwitterUsers;
-import oauth.twitter.Users;
 import play.Play;
-import play.libs.OAuth;
-import play.libs.OAuth.ServiceInfo;
 import play.libs.WS;
 import play.libs.WS.*;
 import play.mvc.Controller;
@@ -56,8 +50,8 @@ public class GoogleAuthentication extends Controller {
             GoogleAuthAccessToken googleAuthAccessToken = gson.fromJson(res.getString(), GoogleAuthAccessToken.class);
 
             List<Connections> connections = getContacts(googleAuthAccessToken);
-            Normalizer normalizer = new Normalizer();
-            normalizer.normalizeGoogleUsers(connections);
+            Serializer serializer = new Serializer();
+            serializer.serializeGoogleUsers(connections);
             renderArgs.put("title", connections.size() + " contacts");
             render();
         } catch (Exception e) {

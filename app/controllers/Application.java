@@ -30,11 +30,12 @@ public class Application extends Controller {
         // Get all contacts from ES
         WS.WSRequest req = WS
                 .url(URL_GET_CONTACTS)
-                .setParameter("size", "1000")
-                .setParameter("default_operator", "AND");
+                .setParameter("size", "1000");
 
         if (!"".equals(name) || !"".equals(importer)) {
-            req = req.setParameter("q", createFilterQuery(name, importer));
+            req = req
+                    .setParameter("default_operator", "AND")
+                    .setParameter("q", createFilterQuery(name, importer));
         }
 
         HttpResponse res = req.get();

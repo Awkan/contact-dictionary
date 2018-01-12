@@ -6,7 +6,6 @@ import models.Contact;
 import oauth.google.Connections;
 import oauth.twitter.Users;
 import play.libs.WS;
-import play.Logger;
 import play.libs.WS.*;
 import com.google.gson.*;
 
@@ -24,13 +23,10 @@ public class Normalizer {
         Gson gson = new Gson();
         GeoPoint geoPoint = new GeoPoint();
         HttpResponse res = WS.url(URL_GET_GEOPOSITION + position).get();
-        Logger.info("Result request : " + res.getStatus());
         if(res.getStatus() != 200){
-            Logger.error("Get GeoPosition error : " + res.getString());
             return geoPoint;
         }
         Geoname geoname = gson.fromJson(res.getString(), Geoname.class);
-        Logger.info(geoname.toString());
 
         if(!geoname.getGeonames().isEmpty()){
             geoPoint.resetLat(Double.parseDouble(geoname.getGeonames().get(0).getLat()));
@@ -90,6 +86,5 @@ public class Normalizer {
                 .setHeader("Content-Type", "application/json")
                 .body(serialized)
                 .post();
-        play.Logger.info(res.getString());
     }
 }

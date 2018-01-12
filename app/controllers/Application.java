@@ -40,10 +40,6 @@ public class Application extends Controller {
 
         HttpResponse res = req.get();
 
-        play.Logger.info(name);
-        play.Logger.info(res.getStatus().toString());
-        play.Logger.info(res.getString());
-
         // Parse receive data
         ElasticDeserializer elasticDeserializer = new ElasticDeserializer();
         JsonObject json = res.getJson().getAsJsonObject();

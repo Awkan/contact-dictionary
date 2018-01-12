@@ -5,7 +5,6 @@ import models.Contact;
 import models.User;
 import oauth.twitter.TwitterUsers;
 import oauth.twitter.Users;
-import play.Logger;
 import play.Play;
 import play.libs.OAuth;
 import play.libs.OAuth.ServiceInfo;
@@ -49,7 +48,6 @@ public class TwitterAuthentication extends Controller{
             params = "&cursor=" + nextCursor;
         }
         HttpResponse res = WS.url(URL_GET_FRIENDS + params).oauth(TWITTER, getUser().token, getUser().secret).get();
-        Logger.info("Result request : " + res.getStatus());
         if(res.getStatus() != 200){
             throw new Exception("Get Users Exception : " + res.getString());
         }
@@ -61,9 +59,7 @@ public class TwitterAuthentication extends Controller{
         List<Users> users = new ArrayList<Users>(0);
         while(!"0".equals(nextCursor)){
             TwitterUsers twitterUsers = getNextUsers(nextCursor);
-            Logger.info("twitterUsers: " + twitterUsers);
             nextCursor = twitterUsers.getNext_cursor();
-            Logger.info("Nextcursor: " + nextCursor);
             users.addAll(twitterUsers.getUsers());
         }
 
@@ -81,9 +77,7 @@ public class TwitterAuthentication extends Controller{
                 user.token = oauthResponse.token;
                 user.secret = oauthResponse.secret;
                 user.save();
-                Logger.info("save User retrieveAccessToken " + user.toString());
             } else {
-                Logger.error("Error connecting to twitter: " + oauthResponse.error);
                 redirect("/error?message=" + "Error connecting to twitter: " + oauthResponse.error);
             }
             index();
@@ -95,11 +89,8 @@ public class TwitterAuthentication extends Controller{
             user.token = oauthResponse.token;
             user.secret = oauthResponse.secret;
             user.save();
-            Logger.info("save User retrieveRequestToken");
-            Logger.info("Redirect URL_GET_FRIENDS " + twitt.redirectUrl(oauthResponse.token));
             redirect(twitt.redirectUrl(oauthResponse.token));
         } else {
-            Logger.error("Error connecting to twitter: " + oauthResponse.error);
             redirect("/error?message=" + "Error connecting to twitter: " + oauthResponse.error);
         }
     }

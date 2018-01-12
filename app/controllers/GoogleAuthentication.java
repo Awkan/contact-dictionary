@@ -9,7 +9,6 @@ import oauth.google.GoogleAuthAccessToken;
 import oauth.google.GoogleContact;
 import oauth.twitter.TwitterUsers;
 import oauth.twitter.Users;
-import play.Logger;
 import play.Play;
 import play.libs.OAuth;
 import play.libs.OAuth.ServiceInfo;
@@ -40,8 +39,6 @@ public class GoogleAuthentication extends Controller {
     }
 
     public static void index(String code) {
-        Logger.info("code=" + code);
-
         HttpResponse res = WS.url(GET_TOKEN)
                 .setParameter("code", code)
                 .setParameter("client_id", "292609518544-em0pi9k905jiqou359gj2v2gng3hhkqo.apps.googleusercontent.com")
@@ -51,11 +48,9 @@ public class GoogleAuthentication extends Controller {
                 .post();
 
         try {
-            Logger.info("Result request : " + res.getStatus());
             if (res.getStatus() != 200) {
                 throw new Exception("Exception : " + res.getString());
             }
-            Logger.info(res.getString());
 
             Gson gson = new Gson();
             GoogleAuthAccessToken googleAuthAccessToken = gson.fromJson(res.getString(), GoogleAuthAccessToken.class);
@@ -96,11 +91,9 @@ public class GoogleAuthentication extends Controller {
                 .setHeader("Authorization", "Bearer " + googleAuthAccessToken.getAccess_token())
                 .get();
 
-        Logger.info("Result request : " + res.getStatus());
         if (res.getStatus() != 200) {
             throw new Exception("Exception : " + res.getString());
         }
-        Logger.info(res.getString());
 
         return gson.fromJson(res.getString(), GoogleContact.class);
     }

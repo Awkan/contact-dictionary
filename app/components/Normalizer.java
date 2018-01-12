@@ -17,7 +17,7 @@ public class Normalizer {
 
     private static final Gson GSON = new Gson();
 
-    private static final String URL_POST_TWITTER_CONTACT = "http://localhost:9200/annuaire/contact";
+    private static final String URL_POST_TWITTER_CONTACT = "http://localhost:9200/mashup/contact";
     private static final String URL_GET_GEOPOSITION = "http://api.geonames.org/searchJSON?maxRows=1&username=gonzalt03&q=";
 
     private GeoPoint getGeoPosition(String position){

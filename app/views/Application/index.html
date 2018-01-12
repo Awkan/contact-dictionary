@@ -24,8 +24,8 @@
                         <label for="importer">Importé depuis</label>
                         <select class="form-control" id="importer" name="importer">
                             <option value="">-</option>
-                            <option value="twitter">Twitter</option>
-                            <option value="google">Google</option>
+                            <option #{if importerFilter=='twitter'}selected#{/if} value="twitter">Twitter</option>
+                            <option #{if importerFilter=='google'}selected#{/if} value="google">Google</option>
                         </select>
                     </div>
                     <div class="col-md-5">
@@ -85,7 +85,6 @@
                            target="_blank">
                             <i class="fa fa-map-o" aria-hidden="true"></i> Carte
                         </a>
-                        </p>
                     </div>
                 #{/if}
             </div>

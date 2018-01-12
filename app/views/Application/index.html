@@ -16,78 +16,87 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
+            <h4>Filtrage des contacts</h4>
+
+            <form action="/" method="post">
+                <div class="row">
+                    <div class="col-md-5">
+                        <label for="importer">Importé depuis</label>
+                        <select class="form-control" id="importer" name="importer">
+                            <option value="">-</option>
+                            <option value="twitter">Twitter</option>
+                            <option value="google">Google</option>
+                        </select>
+                    </div>
+                    <div class="col-md-5">
+                        <label for="name">Nom du contact</label>
+                        <input type="text" class="form-control" id="name" name="name" value="${nameFilter}"/>
+                    </div>
+                    <div class="col-md-2">
+                        <br>
+                        <button type="submit" class="btn btn-block btn-primary"><i class="fa fa-search" aria-hidden="true"></i> Filtrer</button>
+                    </div>
+                </div>
+            </form>
+
+            <br>
+
+            #{if importerFilter}
+                <div class="col-md-12">
+                    Résultat de recherche pour les importations depuis <i>${importerFilter}</i>
+                </div>
+            #{/if}
+            #{if nameFilter}
+                <div class="col-md-12">
+                    Résultat de recherche pour le nom <i>${nameFilter}</i>
+                </div>
+            #{/if}
+
+            <br>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
             <h2>Liste de vos contacts</h2>
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-12">
-            <h3>Filtrage des contacts</h3>
-        </div>
-
-        <div class="col-md-12">
-            <form action="/" method="post">
-                <div class="col-md-3">
-                    <label for="importer">Importé depuis</label>
-                    <select id="importer" name="importer">
-                        <option value="">-</option>
-                        <option value="twitter">Twitter</option>
-                        <option value="google">Google</option>
-                    </select>
-                </div>
-                <div class="col-md-3">
-                    <label for="name">Nom</label>
-                    <input type="text" id="name" name="name" value="${nameFilter}"/>
-                </div>
-                <div class="col-md-3">
-                    <input type="submit" value="Filtrer"/>
-                </div>
-            </form>
-        </div>
-
-        #{if importerFilter}
-        <div class="col-md-12">
-            Résultat de recherche pour les importations depuis <i>${importerFilter}</i>
-        </div>
-        #{/if}
-        #{if nameFilter}
-        <div class="col-md-12">
-            Résultat de recherche pour le nom <i>${nameFilter}</i>
-        </div>
-        #{/if}
-    </div>
-
 
     <div class="row">
-        #{list items:contacts, as:'contact'}
+    #{list items:contacts, as:'contact'}
 
-            <div class="card" style="width: 14rem;">
-                <img class="card-img-top" src="${contact.logoUrl}" alt="Profil">
-                <div class="card-body">
-                    <h5 class="card-title cut">${contact.name}</h5>
+        <div class="card" style="width: 14rem;">
+            <img class="card-img-top" src="${contact.logoUrl}" alt="Profil">
+            <div class="card-body">
+                <h5 class="card-title cut">${contact.name}</h5>
 
-                    <p><i style="color: #1c94c4">${contact.importer}</i></p>
+                <p><i style="color: #1c94c4">${contact.importer}</i></p>
 
-                    #{if contact.location != ""}
-                        <p class="card-text"><i class="fa fa-map-marker" aria-hidden="true"></i> ${contact.location}</p>
-                    #{/if}
+                #{if contact.location != ""}
+                    <p class="card-text"><i class="fa fa-map-marker" aria-hidden="true"></i> ${contact.location}</p>
+                #{/if}
 
 
-                    #{if contact.locationGeoNames != null}
-                        <p class="card-text"><i class="fa fa-location-arrow" aria-hidden="true"></i> ${contact.locationGeoNames.lat}, ${contact.locationGeoNames.lon}</p>
-                        <div class="text-center">
-                            <a href="https://www.google.com/maps/search/${contact.locationGeoNames.lat}, ${contact.locationGeoNames.lon}" class="btn btn-info" target="_blank">
-                                <i class="fa fa-map-o" aria-hidden="true"></i> Carte
-                            </a>
+                #{if contact.locationGeoNames != null}
+                    <p class="card-text"><i class="fa fa-location-arrow" aria-hidden="true"></i> ${contact.locationGeoNames.lat}
+                        , ${contact.locationGeoNames.lon}</p>
+                    <div class="text-center">
+                        <a href="https://www.google.com/maps/search/${contact.locationGeoNames.lat}, ${contact.locationGeoNames.lon}" class="btn btn-info"
+                           target="_blank">
+                            <i class="fa fa-map-o" aria-hidden="true"></i> Carte
+                        </a>
                         </p>
-                        </div>
-                    #{/if}
-                </div>
+                    </div>
+                #{/if}
             </div>
-        #{/list}
-        #{else}
-            <hr/>
-            Aucun contact n'existe. Veuillez en importer.
-        #{/else}
+        </div>
+    #{/list}
+    #{else}
+        <hr/>
+        <div class="col-md-12 text-center">
+            <p>Aucun contact n'existe. Veuillez en importer.</p>
+        </div>
+    #{/else}
     </div>
     <hr/>
 </div>

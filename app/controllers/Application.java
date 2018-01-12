@@ -11,7 +11,7 @@ import java.util.List;
 
 public class Application extends Controller {
 
-    private static final String URL_GET_CONTACTS = "http://localhost:9200/annuaire/_search";
+    private static final String URL_GET_CONTACTS = "http://localhost:9200/mashup/_search";
 
     public static void index() {
         // Get all contacts from ES
